@@ -1,0 +1,30 @@
+description: "LLM Evaluation Demo - Prompt Comparison"
+
+providers:
+  - id: openai:gpt-4.1-mini
+  - id: openai:gpt-3.5-turbo   # You can change model if needed
+
+prompts:
+  - file://prompts/promptA.txt
+  - file://prompts/promptB.txt
+
+tests:
+  - vars:
+      input: file://data/input.txt
+
+    assert:
+      - type: llm-rubric
+        value: |
+          Evaluate the summary based on the following criteria:
+          1. Coverage of key ideas from the text
+          2. Clarity and structure
+          3. Conciseness (around 150 words)
+          4. No hallucinated or incorrect information
+          5. Overall quality and readability
+          6. Accuracy of the summary in reflecting the original text
+
+          Return JSON:
+          {
+            "score": <score>,
+            "feedback": "<feedback>"
+          }

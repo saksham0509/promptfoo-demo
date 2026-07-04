@@ -1,0 +1,11 @@
+Summarize the following text in 150 words.
+
+Focus on:
+- Main idea
+- Key supporting points
+- Clear structure
+
+Avoid adding new or incorrect information.
+
+Text:
+{{input}}
