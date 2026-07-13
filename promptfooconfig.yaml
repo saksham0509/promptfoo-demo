@@ -8,17 +8,22 @@ prompts:
   - file://prompts/promptB.txt
 
 tests:
-  - vars:
-      input: file://data/input.txt
 
+  # 1. Word Count Validation
+  - description: "Word Count <= 80"
+    vars:
+      input: file://data/input.txt
     assert:
-      # 1. Word Count Validation
       - type: javascript
         value: |
           const wordCount = output.split(/\s+/).length;
           return wordCount <= 80;
 
-      # 2. Factual Correctness
+  # 2. Factual Correctness
+  - description: "Factual Correctness"
+    vars:
+      input: file://data/input.txt
+    assert:
       - type: llm-rubric
         value: |
           Original Text:
@@ -26,10 +31,15 @@ tests:
 
           Summary:
           {{output}}
+
           Is the summary factually correct?
           Answer YES or NO and explain briefly.
 
-      # 3. Hallucination Check
+  # 3. Hallucination Check
+  - description: "No Hallucination"
+    vars:
+      input: file://data/input.txt
+    assert:
       - type: llm-rubric
         value: |
           Original Text:
@@ -41,7 +51,11 @@ tests:
           Does the summary contain any hallucinated or incorrect information?
           Answer YES or NO and explain.
 
-      # 4. Context Preservation
+  # 4. Context Preservation
+  - description: "Context Preservation"
+    vars:
+      input: file://data/input.txt
+    assert:
       - type: llm-rubric
         value: |
           Original Text:
@@ -53,7 +67,11 @@ tests:
           Does the summary preserve the main idea and context?
           Answer YES or NO and explain.
 
-      # 5. Overall Quality
+  # 5. Overall Quality
+  - description: "Overall Quality (Rubric Score)"
+    vars:
+      input: file://data/input.txt
+    assert:
       - type: llm-rubric
         value: |
           Original Text:
