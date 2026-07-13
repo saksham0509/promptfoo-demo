@@ -2,7 +2,6 @@ description: "LLM Evaluation Demo - Prompt Comparison"
 
 providers:
   - id: openai:gpt-4.1-mini
-  - id: openai:gpt-3.5-turbo   # You can change model if needed
 
 prompts:
   - file://prompts/promptA.txt
@@ -13,18 +12,66 @@ tests:
       input: file://data/input.txt
 
     assert:
+      # 1. Word Count Validation
+      - type: javascript
+        value: |
+          const wordCount = output.split(/\s+/).length;
+          return wordCount <= 80;
+
+      # 2. Factual Correctness
       - type: llm-rubric
         value: |
-          Evaluate the summary based on the following criteria:
-          1. Coverage of key ideas from the text
-          2. Clarity and structure
-          3. Conciseness (around 150 words)
-          4. No hallucinated or incorrect information
-          5. Overall quality and readability
-          6. Accuracy of the summary in reflecting the original text
+          Original Text:
+          {{input}}
+
+          Summary:
+          {{output}}
+          Is the summary factually correct?
+          Answer YES or NO and explain briefly.
+
+      # 3. Hallucination Check
+      - type: llm-rubric
+        value: |
+          Original Text:
+          {{input}}
+
+          Summary:
+          {{output}}
+
+          Does the summary contain any hallucinated or incorrect information?
+          Answer YES or NO and explain.
+
+      # 4. Context Preservation
+      - type: llm-rubric
+        value: |
+          Original Text:
+          {{input}}
+
+          Summary:
+          {{output}}
+
+          Does the summary preserve the main idea and context?
+          Answer YES or NO and explain.
+
+      # 5. Overall Quality
+      - type: llm-rubric
+        value: |
+          Original Text:
+          {{input}}
+
+          Summary:
+          {{output}}
+
+          Evaluate based on:
+          - Coverage of key ideas
+          - Clarity and structure
+          - Conciseness
+          - No hallucinations
+          - Readability
 
           Return JSON:
           {
-            "score": <score>,
-            "feedback": "<feedback>"
+            "score": <number between 0 and 1>,
+            "feedback": "<brief feedback>"
           }
+        threshold: 0.7

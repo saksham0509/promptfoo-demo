@@ -1,4 +1,4 @@
-Summarize the following text in 150 words.
+Summarize the following Text in exactly 80 words or less.
 
 Focus on:
 - Main idea
